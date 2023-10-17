@@ -5,8 +5,8 @@ After=network.target
 [Service]
 ExecStart=/test-api/node_modules/.bin/ts-node /test-api/src/app.ts
 Restart=always
-User=nobody
-Group=nogroup
+User=testapiuser
+Group=testapigroup
 Environment=PATH=/test-api/node_modules/.bin
 Environment=NODE_ENV=production
 WorkingDirectory=/test-api
