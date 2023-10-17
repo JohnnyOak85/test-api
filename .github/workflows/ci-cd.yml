@@ -25,29 +25,18 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
 
+    env:
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Debugging
-        run: |
-          echo "GitHub Workspace: $GITHUB_WORKSPACE"
-          echo "List contents of GitHub Workspace:"
-          ls $GITHUB_WORKSPACE
-          echo "List contents of $GITHUB_WORKSPACE/test-api.service:"
-          ls $GITHUB_WORKSPACE/test-api.service
-
       - name: Copy Service File
-        run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > temp-key.pem
-          chmod 600 temp-key.pem
-          scp -v -o StrictHostKeyChecking=no -i temp-key.pem $GITHUB_WORKSPACE/test-api.service ec2-user@ec2-3-253-33-5.eu-west-1.compute.amazonaws.com:/etc/systemd/system/
-          rm temp-key.pem
+        run: sudo scp -v -o StrictHostKeyChecking=no -i <(echo "${{ secrets.SSH_PRIVATE_KEY }}") $GITHUB_WORKSPACE/test-api.service ec2-user@ec2-3-253-33-5.eu-west-1.compute.amazonaws.com:/etc/systemd/system/
 
       - name: Deploy to EC2
         run: |
           echo "Starting deployment..."
-          ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} ec2-user@ec2-3-253-33-5.eu-west-1.compute.amazonaws.com 'cd test-api && git pull && npm install && pm2 restart test-api'
+          ssh -o StrictHostKeyChecking=no -i <(echo "${{ secrets.SSH_PRIVATE_KEY }}") ec2-user@ec2-3-253-33-5.eu-west-1.compute.amazonaws.com 'cd test-api && git pull && npm install && pm2 restart test-api'
           echo "Deployment completed."
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
