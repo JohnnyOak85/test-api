@@ -26,20 +26,15 @@ jobs:
     needs: build
 
     steps:
-      - name: Checking current working directory
-        run: |
-          pwd
-          ls
-
       - name: Verify the presence of the service file
         run: |
-          ls test-api.service
+          ls $GITHUB_WORKSPACE/test-api.service
 
       - name: Copy Service File
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > temp-key.pem
           chmod 600 temp-key.pem
-          scp -v -o StrictHostKeyChecking=no -i temp-key.pem test-api.service ec2-user@ec2-3-253-33-5.eu-west-1.compute.amazonaws.com:/etc/systemd/system/
+          scp -v -o StrictHostKeyChecking=no -i temp-key.pem $GITHUB_WORKSPACE/test-api.service ec2-user@ec2-3-253-33-5.eu-west-1.compute.amazonaws.com:/etc/systemd/system/
           rm temp-key.pem
 
       - name: Deploy to EC2
