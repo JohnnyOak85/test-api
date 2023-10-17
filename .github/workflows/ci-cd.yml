@@ -30,6 +30,7 @@ jobs:
         run: echo "${{ secrets.SSH_PRIVATE_KEY }}"
 
       - name: Checking where we are right now
+        working-directory: ./test-api # Adjust this path based on your project structure
         run: |
           echo "Current directory: $(pwd)"
           echo "Contents of the directory:"
