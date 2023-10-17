@@ -29,6 +29,9 @@ jobs:
       - name: Debug SSH Private Key
         run: echo "${{ secrets.SSH_PRIVATE_KEY }}"
 
+      - name: Checking where we are right now
+        run: ls
+
       - name: Copy Service File
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > temp-key.pem
