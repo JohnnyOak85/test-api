@@ -28,8 +28,10 @@ jobs:
     steps:
       - name: Debugging
         run: |
-          pwd
+          echo "GitHub Workspace: $GITHUB_WORKSPACE"
+          echo "List contents of GitHub Workspace:"
           ls $GITHUB_WORKSPACE
+          echo "List contents of $GITHUB_WORKSPACE/test-api.service:"
           ls $GITHUB_WORKSPACE/test-api.service
 
       - name: Copy Service File
