@@ -26,15 +26,14 @@ jobs:
     needs: build
 
     steps:
-      - name: Debug SSH Private Key
-        run: echo "${{ secrets.SSH_PRIVATE_KEY }}"
-
-      - name: Checking where we are right now
-        working-directory: ./test-api # Adjust this path based on your project structure
+      - name: Checking current working directory
         run: |
-          echo "Current directory: $(pwd)"
-          echo "Contents of the directory:"
+          pwd
           ls
+
+      - name: Verify the presence of the service file
+        run: |
+          ls test-api.service
 
       - name: Copy Service File
         run: |
