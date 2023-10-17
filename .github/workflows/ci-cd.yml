@@ -33,7 +33,11 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Copy Service File
-        run: sudo scp -v -o StrictHostKeyChecking=no -i <(echo "${{ secrets.SSH_PRIVATE_KEY }}") $GITHUB_WORKSPACE/test-api.service ec2-user@ec2-3-253-33-5.eu-west-1.compute.amazonaws.com:/etc/systemd/system/
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" | base64 --decode > temp-key.pem
+          chmod 600 temp-key.pem
+          scp -v -o StrictHostKeyChecking=no -i temp-key.pem $GITHUB_WORKSPACE/test-api.service ec2-user@ec2-3-253-33-5.eu-west-1.compute.amazonaws.com:/etc/systemd/system/
+          rm temp-key.pem
 
       - name: Deploy to EC2
         run: |
