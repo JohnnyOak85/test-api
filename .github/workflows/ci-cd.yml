@@ -36,25 +36,6 @@ jobs:
           scp -v -o StrictHostKeyChecking=no -i temp-key.pem test-api.service ec2-user@ec2-3-253-33-5.eu-west-1.compute.amazonaws.com:/etc/systemd/system/
           rm temp-key.pem
 
-      - name: Create User and Group
-        run: |
-          ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} ec2-user@ec2-3-253-33-5.eu-west-1.compute.amazonaws.com '
-            APP_USER=testapiuser
-            APP_GROUP=testapigroup
-
-            # Check if user exists; create if not
-            if ! id -u $APP_USER > /dev/null 2>&1; then
-                sudo useradd -m -s /bin/bash $APP_USER
-            fi
-
-            # Check if group exists; create if not
-            if ! getent group $APP_GROUP > /dev/null 2>&1; then
-                sudo groupadd $APP_GROUP
-            fi
-
-            # Add user to the group
-            sudo usermod -aG $APP_GROUP $APP_USER
-
       - name: Deploy to EC2
         run: |
           echo "Starting deployment..."
