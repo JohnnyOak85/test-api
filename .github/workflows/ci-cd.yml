@@ -36,7 +36,7 @@ jobs:
         run: |
           echo "$SSH_PRIVATE_KEY" > temp-key.pem
           chmod 600 temp-key.pem
-          scp -v -o StrictHostKeyChecking=no -i temp-key.pem $GITHUB_WORKSPACE/test-api.service ec2-user@ec2-3-253-33-5.eu-west-1.compute.amazonaws.com:/etc/systemd/system/
+          sudo scp -v -o StrictHostKeyChecking=no -i temp-key.pem $GITHUB_WORKSPACE/test-api.service ec2-user@ec2-3-253-33-5.eu-west-1.compute.amazonaws.com:/etc/systemd/system/
           rm temp-key.pem
 
       - name: Deploy to EC2
