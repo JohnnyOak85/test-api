@@ -26,6 +26,9 @@ jobs:
     needs: build
 
     steps:
+      - name: Debug SSH Private Key
+        run: echo "${{ secrets.SSH_PRIVATE_KEY }}"
+
       - name: Copy Service File
         run: scp -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} test-api.service ec2-user@ec2-3-253-33-5.eu-west-1.compute.amazonaws.com:/etc/systemd/system/
 
