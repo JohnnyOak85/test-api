@@ -26,8 +26,10 @@ jobs:
     needs: build
 
     steps:
-      - name: Verify the presence of the service file
+      - name: Debugging
         run: |
+          pwd
+          ls $GITHUB_WORKSPACE
           ls $GITHUB_WORKSPACE/test-api.service
 
       - name: Copy Service File
