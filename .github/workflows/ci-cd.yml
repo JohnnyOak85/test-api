@@ -32,15 +32,38 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Copy Service File
+      - name: Create security-key.pem
+        run: echo "$SSH_PRIVATE_KEY" > security-key.pem && chmod 600 security-key.pem
+
+      - name: Set Permissions on EC2
         run: |
-          echo "$SSH_PRIVATE_KEY" > temp-key.pem
-          chmod 600 temp-key.pem
-          sudo scp -v -o StrictHostKeyChecking=no -i temp-key.pem $GITHUB_WORKSPACE/test-api.service ec2-user@ec2-3-253-33-5.eu-west-1.compute.amazonaws.com:/etc/systemd/system/
-          rm temp-key.pem
+          ssh -o StrictHostKeyChecking=no -i security-key.pem ec2-user@ec2-3-253-33-5.eu-west-1.compute.amazonaws.com 'sudo chown ec2-user:ec2-user /etc/systemd/system/'
+          ssh -o StrictHostKeyChecking=no -i security-key.pem ec2-user@ec2-3-253-33-5.eu-west-1.compute.amazonaws.com 'sudo chmod 755 /etc/systemd/system/'
+
+      - name: Copy Service File
+        run: scp -v -o StrictHostKeyChecking=no -i security-key.pem $GITHUB_WORKSPACE/test-api.service ec2-user@ec2-3-253-33-5.eu-west-1.compute.amazonaws.com:/etc/systemd/system/
 
       - name: Deploy to EC2
+        run: ssh -o StrictHostKeyChecking=no -i security-key.pem ec2-user@ec2-3-253-33-5.eu-west-1.compute.amazonaws.com 'cd test-api && git pull && npm install || true'
+
+      - name: Reload systemd
+        run: ssh -o StrictHostKeyChecking=no -i security-key.pem ec2-user@ec2-3-253-33-5.eu-west-1.compute.amazonaws.com 'sudo systemctl daemon-reload'
+
+      - name: Check if the service is already enabled
         run: |
-          echo "Starting deployment..."
-          ssh -o StrictHostKeyChecking=no -i <(echo "${{ secrets.SSH_PRIVATE_KEY }}") ec2-user@ec2-3-253-33-5.eu-west-1.compute.amazonaws.com 'cd test-api && git pull && npm install && pm2 restart test-api'
-          echo "Deployment completed."
+          is_enabled=$(ssh -o StrictHostKeyChecking=no -i security-key.pem ec2-user@ec2-3-253-33-5.eu-west-1.compute.amazonaws.com 'sudo systemctl is-enabled test-api.service' || true)
+          echo "Is service enabled: $is_enabled"
+
+      - name: Enable, start, or restart the service based on status
+        run: |
+          if [ "$is_enabled" != "enabled" ]; then
+            echo "Service not enabled. Enabling and starting..."
+            ssh -o StrictHostKeyChecking=no -i security-key.pem ec2-user@ec2-3-253-33-5.eu-west-1.compute.amazonaws.com 'sudo systemctl enable test-api.service'
+            ssh -o StrictHostKeyChecking=no -i security-key.pem ec2-user@ec2-3-253-33-5.eu-west-1.compute.amazonaws.com 'sudo systemctl start test-api.service'
+          else
+            echo "Service already enabled. Restarting..."
+            ssh -o StrictHostKeyChecking=no -i security-key.pem ec2-user@ec2-3-253-33-5.eu-west-1.compute.amazonaws.com 'sudo systemctl restart test-api.service'
+          fi
+
+      - name: Cleanup security-key.pem
+        run: rm security-key.pem
