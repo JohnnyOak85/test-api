@@ -10,8 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+      - name: List contents of runner's workspace
+        run: |
+          ls $GITHUB_WORKSPACE
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
