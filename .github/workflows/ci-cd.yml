@@ -30,7 +30,7 @@ jobs:
         run: echo "${{ secrets.SSH_PRIVATE_KEY }}"
 
       - name: Copy Service File
-        run: scp -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} test-api.service ec2-user@ec2-3-253-33-5.eu-west-1.compute.amazonaws.com:/etc/systemd/system/
+        run: scp -v -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} test-api.service ec2-user@ec2-3-253-33-5.eu-west-1.compute.amazonaws.com:/etc/systemd/system/
 
       - name: Create User and Group
         run: |
