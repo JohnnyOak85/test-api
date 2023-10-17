@@ -13,10 +13,11 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
+      - name: Set execute permissions on scripts
+        run: chmod +x .github/scripts/*.sh
+
       - name: Install Node.js
-        run: |
-          curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-          sudo apt-get install -y nodejs
+        run: .github/scripts/install-node.sh
 
       - name: Install npm
         run: sudo npm install -g npm
@@ -43,6 +44,9 @@ jobs:
 
       - name: Create security-key.pem
         run: echo "$SSH_PRIVATE_KEY" > security-key.pem && chmod 600 security-key.pem
+
+      - name: Set execute permissions on scripts
+        run: chmod +x .github/scripts/*.sh
 
       - name: Set Permissions on EC2
         run: .github/scripts/set-permissions.sh
