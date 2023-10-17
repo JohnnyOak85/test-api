@@ -7,7 +7,7 @@ ExecStart=/home/ec2-user/test-api/node_modules/.bin/ts-node /home/ec2-user/test-
 Restart=always
 User=ec2-user
 Group=ec2-user
-Environment=PATH=/home/ec2-user/test-api/node_modules/.bin
+Environment=PATH=/home/ec2-user/test-api/node_modules/.bin:/usr/local/bin:/usr/bin:/bin
 Environment=NODE_ENV=production
 WorkingDirectory=/home/ec2-user/test-api
 
