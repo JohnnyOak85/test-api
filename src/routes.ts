@@ -9,6 +9,6 @@ export const routes = [
   {
     method: "*",
     path: "/{p*}",
-    handler: () => buildRouteHandler(() => "404 - Not found"),
+    handler: buildRouteHandler(() => "404 - Not found"),
   },
 ];
