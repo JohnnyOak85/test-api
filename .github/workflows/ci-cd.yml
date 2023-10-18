@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set execute permissions on scripts
         run: chmod +x .github/scripts/*.sh
@@ -40,7 +40,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Create security-key.pem
         run: echo "$SSH_PRIVATE_KEY" > security-key.pem && chmod 600 security-key.pem
