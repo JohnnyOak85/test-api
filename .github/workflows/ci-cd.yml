@@ -36,8 +36,8 @@ jobs:
 
     env:
       EC2_INSTANCE: ec2-user@ec2-3-253-33-5.eu-west-1.compute.amazonaws.com
-      HOST: ${{ env.HOST }}
-      PORT: ${{ env.PORT }}
+      HOST: ${{ HOST }}
+      PORT: ${{ PORT }}
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
     steps:
