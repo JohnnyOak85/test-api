@@ -1,3 +1,3 @@
 #!/bin/bash
 
-ssh $SSH_OPTIONS $EC2_INSTANCE 'source ~/.bashrc'
+ssh $SSH_OPTIONS $EC2_INSTANCE 'source ~/.profile || true'
