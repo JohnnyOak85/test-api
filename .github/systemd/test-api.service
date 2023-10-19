@@ -3,7 +3,7 @@ Description=Test API
 After=network.target
 
 [Service]
-EnvironmentFile=/home/.env
+EnvironmentFile=/home/ec2-user/.env
 ExecStart=/home/ec2-user/test-api/node_modules/.bin/ts-node /home/ec2-user/test-api/src/app.ts
 Restart=always
 User=ec2-user
