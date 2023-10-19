@@ -53,7 +53,7 @@ jobs:
       - name: Set execute permissions on scripts
         run: chmod +x .github/scripts/*.sh
 
-      - name: Set Permissions on EC2
+      - name: Set Permissions
         run: .github/scripts/set-permissions.sh
         env:
           EC2_INSTANCE: ${{ env.EC2_INSTANCE }}
@@ -68,13 +68,13 @@ jobs:
           SERVICE: ${{ env.SERVICE }}
           SSH_OPTIONS: ${{ env.SSH_OPTIONS }}
 
-      - name: Deploy to EC2
+      - name: Deploy
         run: .github/scripts/deploy-to-ec2.sh
         env:
           EC2_INSTANCE: ${{ env.EC2_INSTANCE }}
           SSH_OPTIONS: ${{ env.SSH_OPTIONS }}
 
-      - name: Setting Environment Variables on EC2
+      - name: Set Environment Variables
         run: .github/scripts/set-environment.sh
         env:
           EC2_INSTANCE: ${{ env.EC2_INSTANCE }}
@@ -82,7 +82,7 @@ jobs:
           PORT: ${{ env.PORT }}
           SSH_OPTIONS: ${{ env.SSH_OPTIONS }}
 
-      - name: Reloading Shell on EC2
+      - name: Reload Shell
         run: .github/scripts/reload-shell.sh
         env:
           EC2_INSTANCE: ${{ env.EC2_INSTANCE }}
