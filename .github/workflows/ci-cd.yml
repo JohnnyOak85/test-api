@@ -68,7 +68,7 @@ jobs:
           EC2_INSTANCE: ${{ env.EC2_INSTANCE }}
 
       - name: Setting Environment Variables on EC2
-        run: .github/scripts/set_environment.sh
+        run: .github/scripts/set-environment.sh
         env:
           EC2_INSTANCE: ${{ env.EC2_INSTANCE }}
           HOST: ${{ env.HOST }}
