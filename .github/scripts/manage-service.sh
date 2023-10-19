@@ -1,9 +1,9 @@
 #!/bin/bash
 
-is_enabled=$(ssh -o StrictHostKeyChecking=no -i security-key.pem $EC2_INSTANCE 'sudo systemctl is-enabled test-api.service' || true)
+is_enabled=$(ssh $SSH_OPTIONS $EC2_INSTANCE 'sudo systemctl is-enabled '$SERVICE || true)
 if [ "$is_enabled" != "enabled" ]; then
-    ssh -o StrictHostKeyChecking=no -i security-key.pem $EC2_INSTANCE 'sudo systemctl enable test-api.service'
-    ssh -o StrictHostKeyChecking=no -i security-key.pem $EC2_INSTANCE 'sudo systemctl start test-api.service'
+    ssh $SSH_OPTIONS $EC2_INSTANCE 'sudo systemctl enable '$SERVICE
+    ssh $SSH_OPTIONS $EC2_INSTANCE 'sudo systemctl start '$SERVICE
 else
-    ssh -o StrictHostKeyChecking=no -i security-key.pem $EC2_INSTANCE 'sudo systemctl restart test-api.service'
+    ssh $SSH_OPTIONS $EC2_INSTANCE 'sudo systemctl restart '$SERVICE
 fi

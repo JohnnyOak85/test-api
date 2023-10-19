@@ -36,8 +36,10 @@ jobs:
 
     env:
       EC2_INSTANCE: ec2-user@ec2-3-253-33-5.eu-west-1.compute.amazonaws.com
+      EC2_USER: ec2-user
       HOST: ${{ vars.HOST }}
       PORT: ${{ vars.PORT }}
+      SERVICE: test-api.service
       SSH_OPTIONS: -o StrictHostKeyChecking=no -i security-key.pem
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
@@ -55,17 +57,22 @@ jobs:
         run: .github/scripts/set-permissions.sh
         env:
           EC2_INSTANCE: ${{ env.EC2_INSTANCE }}
+          EC2_USER: ${{ env.EC2_USER }}
+          SSH_OPTIONS: ${{ env.SSH_OPTIONS }}
 
       - name: Copy Service File
         run: .github/scripts/copy-service.sh
         env:
-          GITHUB_WORKSPACE: $GITHUB_WORKSPACE
           EC2_INSTANCE: ${{ env.EC2_INSTANCE }}
+          GITHUB_WORKSPACE: $GITHUB_WORKSPACE
+          SERVICE: ${{ env.SERVICE }}
+          SSH_OPTIONS: ${{ env.SSH_OPTIONS }}
 
       - name: Deploy to EC2
         run: .github/scripts/deploy-to-ec2.sh
         env:
           EC2_INSTANCE: ${{ env.EC2_INSTANCE }}
+          SSH_OPTIONS: ${{ env.SSH_OPTIONS }}
 
       - name: Setting Environment Variables on EC2
         run: .github/scripts/set-environment.sh
@@ -75,15 +82,24 @@ jobs:
           PORT: ${{ env.PORT }}
           SSH_OPTIONS: ${{ env.SSH_OPTIONS }}
 
+      - name: Reloading Shell on EC2
+        run: .github/scripts/reload-shell.sh
+        env:
+          EC2_INSTANCE: ${{ env.EC2_INSTANCE }}
+          SSH_OPTIONS: ${{ env.SSH_OPTIONS }}
+
       - name: Reload systemd
         run: .github/scripts/reload-systemd.sh
         env:
           EC2_INSTANCE: ${{ env.EC2_INSTANCE }}
+          SSH_OPTIONS: ${{ env.SSH_OPTIONS }}
 
       - name: Manage Service
         run: .github/scripts/manage-service.sh
         env:
           EC2_INSTANCE: ${{ env.EC2_INSTANCE }}
+          SERVICE: ${{ env.SERVICE }}
+          SSH_OPTIONS: ${{ env.SSH_OPTIONS }}
 
       - name: Cleanup security-key.pem
         run: rm security-key.pem

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-ssh -o StrictHostKeyChecking=no -i security-key.pem $EC2_INSTANCE 'sudo systemctl daemon-reload'
+ssh $SSH_OPTIONS $EC2_INSTANCE 'sudo systemctl daemon-reload'
