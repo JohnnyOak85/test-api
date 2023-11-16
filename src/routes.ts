@@ -11,4 +11,9 @@ export const routes = [
     path: "/{p*}",
     handler: buildRouteHandler(() => "404 - Not found"),
   },
+  {
+    method: "GET",
+    path: "/temp",
+    handler: buildRouteHandler(() => ({ city: "Lisbon", temperature: 16 })),
+  },
 ];
